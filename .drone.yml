@@ -36,3 +36,8 @@ steps:
       branch:
         - main
 
+---
+kind: signature
+hmac: 45250a8e9456b053fcbcf7c95fbb6707233cad782f9188e44518d44b174c2379
+
+...
