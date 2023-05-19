@@ -1,0 +1,274 @@
+/**
+ * Reset some basic elements
+ */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+hr,
+dl,
+dd,
+ol,
+ul,
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/**
+ * Basic styling
+ */
+body {
+  font: $base-font-weight #{$base-font-size}/#{$base-line-height}
+    $base-font-family;
+  color: $text-color;
+  background-color: $background-color;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-feature-settings: "kern" 1;
+  -moz-font-feature-settings: "kern" 1;
+  -o-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+}
+
+/**
+ * Set `margin-bottom` to maintain vertical rhythm
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+ul,
+ol,
+dl,
+figure,
+%vertical-rhythm {
+  margin-bottom: calc(var(--spacing-unit) / 2);
+}
+
+/**
+ * `main` element
+ */
+main {
+  display: block; /* Default value of `display` of `main` element is 'inline' in IE 11. */
+}
+
+/**
+ * Images
+ */
+img {
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+/**
+ * Figures
+ */
+figure > img {
+  display: block;
+}
+
+figcaption {
+  font-size: $small-font-size;
+}
+
+/**
+ * Lists
+ */
+ul,
+ol {
+  margin-left: var(--spacing-unit);
+}
+
+li {
+  > ul,
+  > ol {
+    margin-bottom: 0;
+  }
+}
+
+/**
+ * Headings
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: $base-font-weight;
+  font-weight: bold;
+}
+
+/**
+ * Links
+ */
+a {
+  color: $brand-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  .social-media-list &:hover {
+    text-decoration: none;
+
+    .username {
+      text-decoration: underline;
+    }
+  }
+}
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  color: $grey-color;
+  border-left: 4px solid $grey-color-light;
+  padding-left: calc(var(--spacing-unit) / 2);
+  @include relative-font-size(1.125);
+  letter-spacing: -1px;
+  font-style: italic;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+/**
+ * Code formatting
+ */
+pre,
+code {
+  font-size: 0.9375em;
+  border: 1px solid hsla(0, 0%, 100%, 0.1);
+  padding: 3em;
+  // background-color: var(--background-color);
+}
+
+code {
+  padding: 1px 5px;
+  background-color: rgba(255, 168, 106, 0.2);
+  color: var(--brand-color);
+  margin: 0 2px;
+  padding: 1px 6px;
+  border: none;
+}
+
+pre {
+  padding: 8px 12px;
+  padding: 1.25em;
+  overflow-x: auto;
+
+  > code {
+    background-color: unset;
+    border: 0;
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.highlight {
+  position: relative;
+}
+
+.highlight > button {
+  all: unset;
+  opacity: 0;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 100;
+  cursor: pointer;
+
+  background: hsla(0, 0%, 87.8%, 0.2) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2) !important;
+  color: #bbb !important;
+  font-size: 0.8em !important;
+  margin: 6px !important;
+  padding: 10px !important;
+  transition: opacity 0.5s ease;
+}
+
+.highlight:hover > button {
+  opacity: 1;
+}
+
+.highlight > button:active,
+.highlight > button:focus {
+  opacity: 1;
+}
+
+/**
+ * Clearfix
+ */
+%clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/**
+ * Icons
+ */
+
+.svg-icon {
+  width: 21px;
+  height: 16px;
+  display: inline-block;
+  fill: #{$grey-color};
+  padding-right: 5px;
+  vertical-align: middle;
+}
+
+.social-media-list {
+  li + li {
+    padding-top: 5px;
+  }
+}
+
+/**
+ * Tables
+ */
+table {
+  margin-bottom: var(--spacing-unit);
+  width: 100%;
+  text-align: $table-text-align;
+  color: lighten($text-color, 18%);
+  border-collapse: collapse;
+  border: 1px solid $grey-color-light;
+  tr {
+    &:nth-child(even) {
+      background-color: lighten($grey-color-light, 6%);
+    }
+  }
+  th,
+  td {
+    padding: calc(var(--spacing-unit) / 3) calc(var(--spacing-unit) / 2);
+  }
+  th {
+    background-color: lighten($grey-color-light, 3%);
+    border: 1px solid darken($grey-color-light, 4%);
+    border-bottom-color: darken($grey-color-light, 12%);
+  }
+  td {
+    border: 1px solid $grey-color-light;
+  }
+}

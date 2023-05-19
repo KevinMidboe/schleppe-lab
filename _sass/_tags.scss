@@ -1,0 +1,16 @@
+
+.tags-page {
+  h1 {
+    color: var(--brand-color);
+  }
+
+  ul {
+    margin-left: 1.25em;
+    color: var(--brand-color);
+    list-style-type: square;
+
+    li a {
+      color: white;
+    }
+  }
+}

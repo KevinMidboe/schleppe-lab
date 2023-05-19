@@ -1,0 +1,138 @@
+---
+layout: post
+title:  Network KVM for ALL of my Servers!
+date:   2023-05-19 15:46:15 +0200
+updated: 2023-05-19 15:52:00 +0200
+tags: networking virtualization
+---
+
+Since I use a lot of repurposed computers as servers, I don’t have many with IPMI / remote access built in. Usually I can configure them remotely through SSH or their web UI, but sometimes things go wrong and it’s nice to have remote console access. Enter, PiKVM, a project to build a networked KVM switch with a Raspberry Pi. Unfortunately, I have a more than one server, and building a PiKVM for every one gets expensive, so I’m combining it with an 8 port rack mount KVM switch so I can remotely view and control all of the servers in my rack.
+
+The KVM I’m using supports network control (but it’s not a network KVM, it can just switch inputs over the network) and I’ve configured that in this video.
+
+# Contents
+
+- [Networking Configuration](#networking-configuration)
+- [PiKVM Configuration](#pikvm-configuration)
+
+# Networking Configuration
+
+The network configuration goes in `/etc/systemd/network/eth0.network`. Make sure to run `rw` to make the filesystem writeable before editing it, and `ro` when you are done.
+
+```
+[Match]
+Name=eth0
+
+[Network]
+DHCP=yes
+DNSSEC=no
+# Use DHCP for primary address
+# Add a static address in a /31 for the TESmart KVM
+Address=192.168.1.11/31
+
+
+[DHCP]
+# Use same IP by forcing to use MAC address for clientID
+ClientIdentifier=mac
+# https://github.com/pikvm/pikvm/issues/583
+RouteMetric=10
+```
+
+# PiKVM Configuration
+
+The PiKVM configuration override goes in `/etc/kvmd/override.yaml`. Make sure to run `rw` to make the filesystem writeable before editing it, and `ro` when you are done. I’m using the default IP of the Tesmart and a /31 subnet to avoid changing it, but if you do change the IP you’d change it here as well.
+
+```yaml
+kvmd:
+    gpio:
+        drivers:
+            tes:
+                type: tesmart
+                host: 192.168.1.10
+                port: 5000
+        scheme:
+            server0_led:
+                driver: tes
+                pin: 0
+                mode: input
+            server0_switch:
+                driver: tes
+                pin: 0
+                mode: output
+                switch: false
+            server1_led:
+                driver: tes
+                pin: 1
+                mode: input
+            server1_switch:
+                driver: tes
+                pin: 1
+                mode: output
+                switch: false    
+            server2_led:
+                driver: tes
+                pin: 2
+                mode: input
+            server2_switch:
+                driver: tes
+                pin: 2
+                mode: output
+                switch: false    
+            server3_led:
+                driver: tes
+                pin: 3
+                mode: input
+            server3_switch:
+                driver: tes
+                pin: 3
+                mode: output
+                switch: false    
+            server4_led:
+                driver: tes
+                pin: 4
+                mode: input
+            server4_switch:
+                driver: tes
+                pin: 4
+                mode: output
+                switch: false    
+            server5_led:
+                driver: tes
+                pin: 5
+                mode: input
+            server5_switch:
+                driver: tes
+                pin: 5
+                mode: output
+                switch: false    
+            server6_led:
+                driver: tes
+                pin: 6
+                mode: input
+            server6_switch:
+                driver: tes
+                pin: 6
+                mode: output
+                switch: false    
+            server7_led:
+                driver: tes
+                pin: 7
+                mode: input
+            server7_switch:
+                driver: tes
+                pin: 7
+                mode: output
+                switch: false
+        view:
+            table:
+                - ["TESMART Switch"]
+                - []
+                - ["#Terra NAS", server0_led, server0_switch|Switch]
+                - ["#Megalab", server1_led, server1_switch|Switch]
+                - ["#PVE1", server2_led, server2_switch|Switch]
+                - ["#PVE2", server3_led, server3_switch|Switch]
+                - ["#PVE3", server4_led, server4_switch|Switch]
+                - ["#Minilab", server5_led, server5_switch|Switch]
+                - ["#OPNsense", server6_led, server6_switch|Switch]
+                - ["#Iridium",  server7_led, server7_switch|Switch]
+```
