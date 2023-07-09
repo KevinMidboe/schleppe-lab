@@ -9,9 +9,8 @@ WORKDIR /opt
 
 COPY . .
 
-RUN gem update --system && gem install jekyll bundler
-# RUN gem update --system && gem install jekyll && gem cleanup 
-RUN bundle install && jekyll build
+RUN make install
+RUN make build
 
 ENTRYPOINT [ "jekyll" ]
 
