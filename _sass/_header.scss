@@ -44,9 +44,9 @@
   @include media-query($on-palm) {
     position: absolute;
     top: 9px;
-    right: calc(var(--spacing-unit) / 2);
+    right: 0;
     background-color: $background-color;
-    border: 1px solid $grey-color-light;
+    border: 1px solid rgba(254, 168, 106, 0.6);
     border-radius: 5px;
     text-align: right;
 
@@ -67,9 +67,12 @@
       line-height: 0;
       padding-top: 10px;
       text-align: center;
+      -webkit-user-select: none;
+      user-select: none;
 
       > svg {
         fill: $grey-color-dark;
+        fill: var(--brand-color);
       }
     }
 
