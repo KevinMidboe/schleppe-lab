@@ -12,9 +12,8 @@ steps:
     image: ruby:3.1-slim-bullseye
     commands:
       - apt update && apt install -y --no-install-recommends build-essential git
-      - gem update --system && gem install jekyll bundler
-      - bundle install
-      - jekyll build
+      - make install
+      - make build
 
   - name: Build and publish docker image
     image: plugins/docker
@@ -38,6 +37,6 @@ steps:
 
 ---
 kind: signature
-hmac: 45250a8e9456b053fcbcf7c95fbb6707233cad782f9188e44518d44b174c2379
+hmac: 46d4d087047afb6e18032e1fea13ba964589d86aaf012343821804612baf5678
 
 ...
