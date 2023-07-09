@@ -1,0 +1,14 @@
+- name: Planetposen
+  github: search?q=user%3Akevinmidboe+sort%3Aupdated+planetposen&type=repositories
+  webpage: https://planet.schleppe.cloud
+
+- name: Vinlottis
+  github: kevinmidboe/vinlottis
+  webpage: https://lottis.vin
+
+- name: Transatlantic Torrent Express
+  github: kevinmidboe/transatlanticTorrentExpress
+
+- name: Request.movie
+  github: kevinmidboe/seasoned
+  webpage: https://request.movie
