@@ -54,7 +54,7 @@ And reboot, watching boot messages on the console happily
 *cluster viewed from here*
 
 {% include image.html
-  src="0001-proxmox.png"
+  src="0001-proxmox_2x.jpg"
   alt="Jekyll's logo"
   caption="This is Jekyll's logo, featuring Dr. Jekyll's serum!"
 %}
@@ -64,14 +64,14 @@ I get that these push clippy things are on the low end because they’re cheap a
 I really don’t mind warping as much as a lot of people seem to, I’ve used a lot of warped PCBs in my day and they’re pretty solid bits of kit. Once I installed the board in the case the motherboard screws seemed to ‘bed it back’ as it were, so the board was straight.
 
 {% include image.html
-  src="0002-proxmox.png"
+  src="0002-proxmox_2x.jpg"
   alt="Jekyll's logo"
   caption="This is Jekyll's logo, featuring Dr. Jekyll's serum!"
   fullwidth="true"
 %}
 
 {% include image.html
-  src="0003-proxmox.png"
+  src="0003-proxmox_2x.jpg"
   alt="Jekyll's logo"
   caption="This is Jekyll's logo, featuring Dr. Jekyll's serum!"
   fullwidth="true"
