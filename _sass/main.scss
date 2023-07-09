@@ -12,6 +12,10 @@
   src: url("/assets/fonts/FiraCode-Bold.ttf");
 }
 
+$text-color: white;
+$background-color: #222129;
+$brand-color: #fea86a;
+
 :root {
   --font-family: "Fira Code", Monaco, Consolas, "Ubuntu Mono", monospace;
   --font-size: 16px;
@@ -21,9 +25,9 @@
 
   --spacing-unit: 2.5em;
 
-  --text-color: white;
-  --background-color: #222129;
-  --brand-color: #fea86a;
+  --text-color: $text-color;
+  --background-color: $background-color;
+  --brand-color: $brand-color;
   --border-color: hsla(0, 0%, 100%, 0.1);
 }
 $base-font-family: "Fira Code", Monaco, Consolas, "Ubuntu Mono", monospace !default;
@@ -33,10 +37,6 @@ $small-font-size: $base-font-size * 0.875 !default;
 $base-line-height: 1.5 !default;
 
 $spacing-unit: 2.5em !default;
-
-$text-color: white !default;
-$background-color: #222129 !default;
-$brand-color: #fea86a !default;
 
 $grey-color: #828282 !default;
 $grey-color-light: lighten($grey-color, 40%) !default;

@@ -33,6 +33,9 @@ github_username: kevinmidboe
 show_excerpts: true
 # permalink: /posts/:year/:slug:output_ext
 permalink: /posts/:year/:slug
+header_pages:
+  - _pages/about.markdown
+  - _pages/tags.markdown
 
 tag_page_layout: tag_page
 tag_page_dir: tag
