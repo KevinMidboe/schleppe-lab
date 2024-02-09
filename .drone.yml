@@ -85,7 +85,7 @@ steps:
   - name: Deploy to kubernetes
     image: alpine/k8s:1.25.15
     commands:
-      - export DOCKER_CONFIG_BASE64=$(cat /root/.kube/dockerconfig.json | tr -d "\n" | base64 -w 0)
+      - export DOCKER_CONFIG_BASE64=$(cat /root/.kube/dockerconfig.json | tr -d "\n\t " | base64 -w 0)
       - export IMAGE="ghcr.io/kevinmidboe/${DRONE_REPO_NAME}:${DRONE_COMMIT_SHA}"
       - cat .kubernetes/*.yml
         | envsubst
@@ -113,6 +113,6 @@ volumes:
 
 ---
 kind: signature
-hmac: b184788d8523f312c38d6d535a0fb8b933aa73e3a15a9540c6c80179efa3a85a
+hmac: fe9955b547b6cb815b7989dd203a8e4ee91e33cefedb16ee2232795875ba9b4b
 
 ...
