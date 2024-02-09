@@ -51,7 +51,7 @@ steps:
     commands:
       - mkdir -p /root/.kube
       - echo $KUBE_CONFIG | base64 -di > /root/.kube/config
-      - export IMAGE=ghcr.io/kevinmidboe/k9e.no:${DRONE_COMMIT_SHA}
+      - export IMAGE="ghcr.io/kevinmidboe/k9e.no:${DRONE_COMMIT_SHA}"
 
   - name: Deploy to kubernetes
     image: alpine/k8s:1.25.15
@@ -73,7 +73,7 @@ steps:
         - feat/ci-vault-secrets
 
 depends_on:
-  - Build
+  - Build and publish
 
 ---
 kind: secret
@@ -91,6 +91,6 @@ get:
 
 ---
 kind: signature
-hmac: 20e3c2826063e7fd9423042efea3d47a80cc8164dee1b9deba7a03e63d445911
+hmac: 8183dff7ea6b63de2d75650d40df457f018e295f4805e43e6014827931ebf62f
 
 ...
