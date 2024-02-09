@@ -35,7 +35,9 @@ steps:
         from_secret: GITHUB_USERNAME
       password:
         from_secret: GHCR_UPLOAD_TOKEN
-      tags: latest
+      tags:
+        - latest
+        - ${DRONE_COMMIT_SHA}
 
 trigger:
   event:
@@ -111,6 +113,6 @@ volumes:
 
 ---
 kind: signature
-hmac: cb65389bbc13b392c364cf85f3863195049ce8cb515c5a378472e0b0b3c68483
+hmac: b184788d8523f312c38d6d535a0fb8b933aa73e3a15a9540c6c80179efa3a85a
 
 ...
