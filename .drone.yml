@@ -15,6 +15,11 @@ steps:
       - make install
       - make build
 
+trigger:
+  branch:
+    exclude:
+      - feat/ci-vault-secrets
+
 ---
 kind: pipeline
 type: docker
@@ -32,7 +37,7 @@ steps:
       repo: ghcr.io/kevinmidboe/schleppe-lab
       dockerfile: Dockerfile
       username:
-        from_secret: github_username
+        from_secret: GITHUB_USERNAME
       password:
         from_secret: github_password
       tags: latest
@@ -63,10 +68,22 @@ steps:
     image: alpine/k8s:1.25.15
     commands:
       - mkdir -p /root/.kube
-      - echo $KUBE_CONFIG | base64 -di > /root/.kube/config
+      - echo $GITHUB_USERNAME > /tmp/username
+      - echo $KUBE_CONFIG
+      - cat /tmp/username
+      - ls /root
+      - ls /root/.kube
+      - echo KUBE_CONFIG > /root/.kube/config
+      - 'curl -s -H "X-Vault-Token: $VAULT_TOKEN" http://vault.schleppe:8200/v1/schleppe/data/drone/schleppe-lab | jq -r ".data.data.KUBE_CONFIG" > /root/.kube/config'
+      - ls /root/.kube
+      - cat /root/.kube/config
     environment:
       KUBE_CONFIG:
         from_secret: kube_config
+      GITHUB_USERNAME:
+        from_secret: GITHUB_USERNAME
+      VAULT_TOKEN:
+        from_secret: VAULT_TOKEN
     volumes:
     - name: kube-config
       path: /root/.kube
@@ -74,6 +91,7 @@ steps:
   - name: Deploy to kubernetes
     image: alpine/k8s:1.25.15
     commands:
+      - cat /root/.kube/config
       - export IMAGE="ghcr.io/kevinmidboe/${DRONE_REPO_NAME}:${DRONE_COMMIT_SHA}"
       - cat .kubernetes/*.yml
         | envsubst
@@ -101,7 +119,7 @@ volumes:
 
 ---
 kind: secret
-name: github_username
+name: GITHUB_USERNAME
 get:
   path: schleppe/data/drone/${DRONE_REPO_NAME}
   name: GITHUB_USERNAME
@@ -115,13 +133,13 @@ get:
 
 ---
 kind: secret
-name: kube_Config
+name: kube_config
 get:
   path: schleppe/data/drone/${DRONE_REPO_NAME}
   name: KUBE_CONFIG
 
 ---
 kind: signature
-hmac: c3b55ead723a89b3e9c27f81ad324d852f42de036b27ecf8a513f07339198773
+hmac: 123b3dd3c71647b8c2d196fe0950a86d7cd6c8afb3e7bdd1333da2d45c412116
 
 ...
