@@ -36,14 +36,15 @@ steps:
       password:
         from_secret: github_password
       tags: latest
-    when:
-      event:
-        include:
-          - push
-        exclude:
-          - pull_request
-      branch:
-        - main
+
+trigger:
+  event:
+    include:
+      - push
+    exclude:
+      - pull_request
+  branch:
+    - main
 
 depends_on:
   - Build
