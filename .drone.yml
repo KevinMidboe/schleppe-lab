@@ -22,9 +22,9 @@ steps:
       repo: ghcr.io/kevinmidboe/schleppe-lab
       dockerfile: Dockerfile
       username:
-        from_secret: GITHUB_USERNAME
+        from_secret: github_username
       password:
-        from_secret: GITHUB_PASSWORD
+        from_secret: github_password
       tags: latest
     when:
       event:
@@ -35,8 +35,62 @@ steps:
       branch:
         - main
 
+
+---
+kind: pipeline
+type: docker
+name: Deploy
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: Prepare kubernetes environment
+    image: alpine/k8s:1.25.15
+    commands:
+      - mkdir -p /root/.kube
+      - echo $KUBE_CONFIG | base64 -di > /root/.kube/config
+      - export IMAGE=ghcr.io/kevinmidboe/k9e.no:${DRONE_COMMIT_SHA}
+
+  - name: Deploy to kubernetes
+    image: alpine/k8s:1.25.15
+    commands:
+      - cat .kubernetes/*.yml
+        | envsubst
+        | kubectl --kubeconfig=/root/.kube/config apply -f -
+    environment:
+      KUBE_CONFIG:
+        from_secret: KUBE_CONFIG
+    when:
+      event:
+        include:
+          - push
+        exclude:
+          - pull_request
+      branch:
+        - main
+        - feat/ci-vault-secrets
+
+depends_on:
+  - Build
+
+---
+kind: secret
+name: github_username
+get:
+  path: schleppe/data/drone/${DRONE_REPO_NAME}
+  name: GITHUB_USERNAME
+
+---
+kind: secret
+name: github_password
+get:
+  path: schleppe/data/drone/${DRONE_REPO_NAME}
+  name: GITHUB_PASSWORD
+
 ---
 kind: signature
-hmac: 46d4d087047afb6e18032e1fea13ba964589d86aaf012343821804612baf5678
+hmac: 20e3c2826063e7fd9423042efea3d47a80cc8164dee1b9deba7a03e63d445911
 
 ...
