@@ -64,6 +64,9 @@ steps:
     commands:
       - mkdir -p /root/.kube
       - echo $KUBE_CONFIG | base64 -di > /root/.kube/config
+    environment:
+      KUBE_CONFIG:
+        from_secret: kube_config
     volumes:
     - name: kube-config
       path: /root/.kube
@@ -75,9 +78,6 @@ steps:
       - cat .kubernetes/*.yml
         | envsubst
         | kubectl --kubeconfig=/root/.kube/config apply -f -
-    environment:
-      KUBE_CONFIG:
-        from_secret: KUBE_CONFIG
     volumes:
     - name: kube-config
       path: /root/.kube
@@ -114,7 +114,14 @@ get:
   name: GITHUB_PASSWORD
 
 ---
+kind: secret
+name: kube_Config
+get:
+  path: schleppe/data/drone/${DRONE_REPO_NAME}
+  name: KUBE_CONFIG
+
+---
 kind: signature
-hmac: 7f6cc19cf8969fd1a52260b1a5e2af8a2c2a7daa4b3c195cbaf3028510420cac
+hmac: c3b55ead723a89b3e9c27f81ad324d852f42de036b27ecf8a513f07339198773
 
 ...
