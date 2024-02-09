@@ -39,7 +39,7 @@ steps:
       username:
         from_secret: GITHUB_USERNAME
       password:
-        from_secret: github_password
+        from_secret: GHCR_UPLOAD_TOKEN
       tags: latest
 
 trigger:
@@ -68,10 +68,15 @@ steps:
     image: alpine/k8s:1.25.15
     commands:
       - mkdir -p /root/.kube
-      - 'curl -s -H "X-Vault-Token: $VAULT_TOKEN" http://vault.schleppe:8200/v1/schleppe/data/drone/schleppe-lab | jq -r ".data.data.KUBE_CONFIG" > /root/.kube/config'
+      - 'curl -s
+        -H "X-Vault-Token: $VAULT_TOKEN"
+        $VAULT_HOST/v1/schleppe/data/kazan/${DRONE_REPO_NAME}
+        | jq -r ".data.data.KUBE_CONFIG" > /root/.kube/config'
     environment:
       VAULT_TOKEN:
         from_secret: VAULT_TOKEN
+      VAULT_HOST:
+        from_secret: VAULT_HOST
     volumes:
     - name: kube-config
       path: /root/.kube
@@ -103,27 +108,6 @@ depends_on:
 volumes:
 - name: kube-config
   temp: {}
-
----
-kind: secret
-name: GITHUB_USERNAME
-get:
-  path: schleppe/data/drone/${DRONE_REPO_NAME}
-  name: GITHUB_USERNAME
-
----
-kind: secret
-name: github_password
-get:
-  path: schleppe/data/drone/${DRONE_REPO_NAME}
-  name: GITHUB_PASSWORD
-
----
-kind: secret
-name: kube_config
-get:
-  path: schleppe/data/drone/${DRONE_REPO_NAME}
-  name: KUBE_CONFIG
 
 ---
 kind: signature
