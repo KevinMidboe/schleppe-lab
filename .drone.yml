@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: docker
-name: Build and publish
+name: Build
 
 platform:
   os: linux
@@ -15,6 +15,16 @@ steps:
       - make install
       - make build
 
+---
+kind: pipeline
+type: docker
+name: Publish
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
   - name: Build and publish docker image
     image: plugins/docker
     settings:
@@ -35,6 +45,8 @@ steps:
       branch:
         - main
 
+depends_on:
+  - Build
 
 ---
 kind: pipeline
@@ -51,7 +63,6 @@ steps:
     commands:
       - mkdir -p /root/.kube
       - echo $KUBE_CONFIG | base64 -di > /root/.kube/config
-      - export IMAGE="ghcr.io/kevinmidboe/k9e.no:${DRONE_COMMIT_SHA}"
     volumes:
     - name: kube-config
       path: /root/.kube
@@ -59,6 +70,7 @@ steps:
   - name: Deploy to kubernetes
     image: alpine/k8s:1.25.15
     commands:
+      - export IMAGE="ghcr.io/kevinmidboe/${DRONE_REPO_NAME}:${DRONE_COMMIT_SHA}"
       - cat .kubernetes/*.yml
         | envsubst
         | kubectl --kubeconfig=/root/.kube/config apply -f -
@@ -79,7 +91,12 @@ steps:
         - feat/ci-vault-secrets
 
 depends_on:
-  - Build and publish
+  - Build
+  - Publish
+
+volumes:
+- name: kube-config
+  temp: {}
 
 ---
 kind: secret
