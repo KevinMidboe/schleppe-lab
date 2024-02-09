@@ -15,11 +15,6 @@ steps:
       - make install
       - make build
 
-trigger:
-  branch:
-    exclude:
-      - feat/ci-vault-secrets
-
 ---
 kind: pipeline
 type: docker
@@ -72,6 +67,10 @@ steps:
         -H "X-Vault-Token: $VAULT_TOKEN"
         $VAULT_HOST/v1/schleppe/data/kazan/${DRONE_REPO_NAME}
         | jq -r ".data.data.KUBE_CONFIG" > /root/.kube/config'
+      - 'curl -s
+        -H "X-Vault-Token: $VAULT_TOKEN"
+        $VAULT_HOST/v1/schleppe/data/kazan/${DRONE_REPO_NAME}
+        | jq -r ".data | .data | .[\"ghcr-login-secret\"]" > /root/.kube/dockerconfig.json'
     environment:
       VAULT_TOKEN:
         from_secret: VAULT_TOKEN
@@ -84,6 +83,7 @@ steps:
   - name: Deploy to kubernetes
     image: alpine/k8s:1.25.15
     commands:
+      - export DOCKER_CONFIG_BASE64=$(cat /root/.kube/dockerconfig.json | tr -d "\n" | base64 -w 0)
       - export IMAGE="ghcr.io/kevinmidboe/${DRONE_REPO_NAME}:${DRONE_COMMIT_SHA}"
       - cat .kubernetes/*.yml
         | envsubst
@@ -91,15 +91,15 @@ steps:
     volumes:
     - name: kube-config
       path: /root/.kube
-    when:
-      event:
-        include:
-          - push
-        exclude:
-          - pull_request
-      branch:
-        - main
-        - feat/ci-vault-secrets
+
+trigger:
+  event:
+    include:
+      - push
+    exclude:
+      - pull_request
+  branch:
+    - main
 
 depends_on:
   - Build
@@ -111,6 +111,6 @@ volumes:
 
 ---
 kind: signature
-hmac: 123b3dd3c71647b8c2d196fe0950a86d7cd6c8afb3e7bdd1333da2d45c412116
+hmac: cb65389bbc13b392c364cf85f3863195049ce8cb515c5a378472e0b0b3c68483
 
 ...

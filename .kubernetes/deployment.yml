@@ -28,11 +28,13 @@ spec:
     spec:
       containers:
         - image: ${IMAGE}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: schleppe-lab
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+      imagePullSecrets:
+      - name: ghcr-login-secret
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
