@@ -29,7 +29,7 @@ steps:
     image: plugins/docker
     settings:
       registry: ghcr.io
-      repo: ghcr.io/kevinmidboe/schleppe-lab
+      repo: ghcr.io/kevinmidboe/${DRONE_REPO_NAME}
       dockerfile: Dockerfile
       username:
         from_secret: GITHUB_USERNAME
@@ -63,21 +63,27 @@ platform:
 steps:
   - name: Prepare kubernetes environment
     image: alpine/k8s:1.25.15
-    commands:
-      - mkdir -p /root/.kube
-      - 'curl -s
-        -H "X-Vault-Token: $VAULT_TOKEN"
-        $VAULT_HOST/v1/schleppe/data/kazan/${DRONE_REPO_NAME}
-        | jq -r ".data.data.KUBE_CONFIG" > /root/.kube/config'
-      - 'curl -s
-        -H "X-Vault-Token: $VAULT_TOKEN"
-        $VAULT_HOST/v1/schleppe/data/kazan/${DRONE_REPO_NAME}
-        | jq -r ".data | .data | .[\"ghcr-login-secret\"]" > /root/.kube/dockerconfig.json'
     environment:
       VAULT_TOKEN:
         from_secret: VAULT_TOKEN
       VAULT_HOST:
         from_secret: VAULT_HOST
+    commands:
+      - mkdir -p /root/.kube
+      - echo "IMAGE=ghcr.io/kevinmidboe/${DRONE_REPO_NAME}:${DRONE_COMMIT_SHA}" > /root/.kube/.env
+      - echo "NAMESPACE=${DRONE_REPO_NAME}" >> /root/.kube/.env
+      - 'curl -s
+        -H "X-Vault-Token: $VAULT_TOKEN"
+        $VAULT_HOST/v1/schleppe/data/kazan/_infra
+        | jq -cr ".data.data.KUBE_CONFIG"
+        > /root/.kube/config'
+      - 'curl -s
+        -H "X-Vault-Token: $VAULT_TOKEN"
+        $VAULT_HOST/v1/schleppe/data/kazan/_infra
+        | jq -cr ".data.data | .[\"ghcr-login-secret\"] | @base64"
+        > /root/.kube/dockerconfig.json'
+      - echo "DOCKER_CONFIG=$(cat /root/.kube/dockerconfig.json)" >> /root/.kube/.env
+      - sed -i '/^$/!s/^/export /' /root/.kube/.env
     volumes:
     - name: kube-config
       path: /root/.kube
@@ -85,8 +91,7 @@ steps:
   - name: Deploy to kubernetes
     image: alpine/k8s:1.25.15
     commands:
-      - export DOCKER_CONFIG_BASE64=$(cat /root/.kube/dockerconfig.json | tr -d "\n\t " | base64 -w 0)
-      - export IMAGE="ghcr.io/kevinmidboe/${DRONE_REPO_NAME}:${DRONE_COMMIT_SHA}"
+      - source /root/.kube/.env > /dev/null 2>&1
       - cat .kubernetes/*.yml
         | envsubst
         | kubectl --kubeconfig=/root/.kube/config apply -f -
@@ -113,6 +118,6 @@ volumes:
 
 ---
 kind: signature
-hmac: fe9955b547b6cb815b7989dd203a8e4ee91e33cefedb16ee2232795875ba9b4b
+hmac: 09d1d630e540afad36b45ad1df42ab8bb9675218fc567872f2916ca0614c7ee7
 
 ...
