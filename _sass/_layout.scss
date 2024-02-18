@@ -127,7 +127,8 @@ figure.fullwidth {
 
 .post-title {
   --border: 3px dotted var(--brand-color);
-  font-size: 2em;
+  font-family: "Post title font";
+  font-size: 4em;
   color: var(--brand-color);
   border-bottom: var(--border);
   letter-spacing: -1px;
@@ -156,6 +157,9 @@ figure.fullwidth {
   h2,
   h3,
   h4 {
+    font-family: "Post title font";
+    color: rgba(8,76,207,.5);
+
     a {
       opacity: 0;
       transition: opacity 0.15s ease;
@@ -167,6 +171,14 @@ figure.fullwidth {
 
     a:hover {
       text-decoration: none;
+    }
+  }
+
+  h1 {
+    @include relative-font-size(2);
+
+    @include media-query($on-laptop) {
+      @include relative-font-size(1.75);
     }
   }
 
