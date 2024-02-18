@@ -79,12 +79,16 @@ img {
 /**
  * Figures
  */
-figure > img {
-  display: block;
+figure {
+  > img {
+    display: block;
+  }
 }
 
 figcaption {
-  font-size: $small-font-size;
+  font-size: 0.75rem;
+  font-style: italic;
+  padding: 0.5rem 1rem;
 }
 
 /**

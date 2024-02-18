@@ -194,3 +194,13 @@ figure.fullwidth {
     }
   }
 }
+
+@mixin border-accent {
+  background-color: white;
+  border: 1px solid rgba(8,76,207,0.3);
+  box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(8, 76, 207, 0.07) 4px 4px 0px 0px;
+}
+
+.border-accent {
+  @include border-accent;
+}
