@@ -1,6 +1,6 @@
 // This assumes that you're using Rouge; if not, update the selector
 // const codeBlocks = document.querySelectorAll('.code-header + .highlighter-rouge');
-const codeBlocks = document.querySelectorAll('div.highlight');
+const codeBlocks = document.querySelectorAll('figure.highlight');
 const copyCodeButtons = document.querySelectorAll('.copy-code-button');
 
 codeBlocks.forEach((codeBlock) => {
@@ -13,7 +13,7 @@ codeBlocks.forEach((codeBlock) => {
   codeBlock.append(copyButton);
 
   copyButton.addEventListener('click', function () {
-    const code = codeBlock.querySelector('code').innerText.trim();
+    const code = codeBlock.querySelector('.code').innerText.trim();
     window.navigator.clipboard.writeText(code);
 
     copyButton.innerText = 'Copied';

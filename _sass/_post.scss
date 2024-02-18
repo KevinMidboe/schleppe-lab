@@ -12,27 +12,80 @@ code {
 code {
   padding: 1px 5px;
   background-color: rgba(255, 168, 106, 0.2);
+  background-color: rgba(8,76,207,.1);
   color: var(--brand-color);
   margin: 0 2px;
   padding: 1px 6px;
   border: none;
 }
 
-pre {
-  padding: 8px 12px;
-  padding: 1.25em;
-  overflow-x: auto;
+figure.highlight {
+  @include border-accent;
 
-  > code {
-    background-color: unset;
-    border: 0;
-    padding-right: 0;
-    padding-left: 0;
+  > pre {
+    // padding: 0;
+    margin-bottom: 0;
+
+    > code {
+      background-color: unset;
+      color: unset;
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
   }
 }
 
-div.highlight {
+figure#highlight-figure {
   position: relative;
+
+  > figcaption {
+    position: absolute;
+    bottom: 0.5rem;
+    z-index: 1;
+  }
+}
+
+.rouge-table {
+  > pre {
+    overflow-x: auto;
+    @include border-accent;
+  }
+
+  .lineno {
+    text-align: right;
+    border-right-color: lightgrey;
+    margin-left: -2rem;
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  td > pre {
+    padding: 0;
+    // padding: 1rem 0.5rem;
+  }
+
+  &:not(.lineno) {
+    border-left: none;
+  }
+
+ }
+
+
+
+figure.highlight {
+  position: relative;
+
+ table {
+    border-collapse: collapse;
+    margin-bottom: 0;
+
+    td {
+      padding: 0;
+      border-style: hidden !important;
+    }
+  }
+
 }
 
 .highlight > button {
@@ -46,11 +99,11 @@ div.highlight {
 
   background: hsla(0, 0%, 87.8%, 0.8) !important;
   border-radius: 0 !important;
-  box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 0 2px 0 0 rgba(8,76,207,.5) !important;
   color: black;
   font-size: 0.8em !important;
   margin: 6px !important;
-  padding: 10px !important;
+  padding: 0.5rem 0.8rem;
   transition: all 0.5s ease;
 }
 
