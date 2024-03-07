@@ -47,6 +47,7 @@ trigger:
       - pull_request
   branch:
     - main
+    - feat/nginx-json-logs
 
 depends_on:
   - Build
@@ -107,6 +108,7 @@ trigger:
       - pull_request
   branch:
     - main
+    - feat/nginx-json-logs
 
 depends_on:
   - Build
@@ -118,6 +120,6 @@ volumes:
 
 ---
 kind: signature
-hmac: 09d1d630e540afad36b45ad1df42ab8bb9675218fc567872f2916ca0614c7ee7
+hmac: aea9d888a8d4261c7f1d654fe5d9e1fe5aee95e565bb689251eae23d8c4a41a2
 
 ...
